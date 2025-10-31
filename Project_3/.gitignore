@@ -1,0 +1,11 @@
+# Python cache
+__pycache__/
+
+# Virtuální prostředí
+venv/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Mypy type checker cache
+.mypy_cache/
