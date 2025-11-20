@@ -12,7 +12,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE,
-            highscore INTEGER DEFAULT 0
+            highscore INTEGER DEFAULT 0,
+            lastscore INTEGER DEFAULT 0
         )
     """)
 
@@ -45,7 +46,7 @@ def update_score(username, new_score):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Získáme původní skóre
+    # Získáme původní nejlepší skóre
     cursor.execute("SELECT highscore FROM users WHERE username = ?", (username,))
     result = cursor.fetchone()
     old_score = result[0] if result else 0
@@ -53,6 +54,9 @@ def update_score(username, new_score):
     # Pokud nové skóre je lepší → aktualizujeme
     if new_score > old_score:
         cursor.execute("UPDATE users SET highscore = ? WHERE username = ?", (new_score, username))
+
+    # Zapíšeme poslední skóre
+    cursor.execute("UPDATE users SET lastscore = ? WHERE username = ?", (new_score, username))
 
     conn.commit()
     conn.close()

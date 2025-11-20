@@ -6,35 +6,41 @@ from db.database import init_db
 
 class Game:
     def __init__(self):
-        pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
-        pygame.display.set_caption("Space Invaders Skeleton")
-        self.clock = pygame.time.Clock()
-        self.running = True
+        """
+        Konstruktor, který se zavolá vždy.
+        Nastaví základní atributy hry a jednu metodu, která provede spuštění hry.
+        """
+        # ----- inicializace hry -----
+        pygame.init()   # inicializace modulárních podsystémů knihovny pygame
+        self.screen = pygame.display.set_mode((800, 600))   # velikost screenu hry
+        pygame.display.set_caption("Space Invaders Skeleton")   # popisek okna hry
+        self.clock = pygame.time.Clock()    # vytvoření objektu, kterým budeme udávat rychlost hru (FPS)
+        self.running = True     # atribut, který dokud bude True, tak hra poběží
 
-        # ----- NOVÉ -----
+        # ----- vytvoření databáze a aktuálně sledovaného uživatele -----
         init_db()  # inicializace databáze
         self.current_user = None  # místo, kam uložíme aktuálního hráče
 
-        self.state = "menu"        # aktuální obrazovka
-        self.screens = {
-            "menu": MenuScreen(self),
-            "user_select": UserSelectScreen(self),
-            "mission1": Mission1Screen(self)
+        # ----- aktuální stav, na jaké "obrazovce" zrovna jsme -----
+        self.state = "menu"        # aktuální obrazovka, začínáme v menu
+        self.screens = {           # všechny obrazovky, mezi kterými budeme přepínat, reprezentované objekty
+            "menu": MenuScreen(self),   # obrazovka menu
+            "user_select": UserSelectScreen(self),  # obrazovka zadání aktuálního uživatele
+            "mission1": Mission1Screen(self)    # obrazovka Mise 1
         }
 
     def run(self):
-        while self.running:
-            screen_obj = self.screens[self.state]
+        while self.running:     # dokud je runniny = True, poběží nekonečná smyčka
+            screen_obj = self.screens[self.state]   # aktuální obrazovka - jeden z objektů: Menu, Výběr hráče, Mise 1
 
-            screen_obj.handle_events()
-            screen_obj.update()
-            screen_obj.render(self.screen)
+            screen_obj.handle_events()  # koukáme po událostech
+            screen_obj.update() # herní logika - jak se hra mění
+            screen_obj.render(self.screen) # vykreslování na aktuální obrazovku (vlastně jen do skryté vrstvy)
 
-            pygame.display.flip()
-            self.clock.tick(60)
+            pygame.display.flip()   # vymění skrytou vrstvu za viditelnou
+            self.clock.tick(60)     # max 60 FPS
 
-        pygame.quit()
+        pygame.quit()   # ukončení hry, pokud running = False
 
-if __name__ == "__main__":
-    Game().run()
+if __name__ == "__main__":  # provede se jen, pokud bude modul spuštěný napřímo
+    Game().run()            # vytvoření instance hry a zavolání metody run pro spuštění hry, začínáme v menu

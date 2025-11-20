@@ -8,6 +8,7 @@ class MenuScreen:
 
         self.leader_font = pygame.font.Font(None, 36)  # font pro jména a skóre
         self.leader_title_font = pygame.font.Font(None, 48)  # font pro 'TOP 5 hráčů'
+        self.current_user = pygame.font.Font(None, 40) # font for the current user
 
         # Tlačítka definujeme jako rect (x, y, šířka, výška)
         self.buttons = {
@@ -48,13 +49,19 @@ class MenuScreen:
         screen.blit(start_text, (self.buttons["start"].x + 50, self.buttons["start"].y + 10))
         screen.blit(exit_text, (self.buttons["exit"].x + 60, self.buttons["exit"].y + 10))
 
-        # --- NOVÉ: highscore hráče ---
+        # --- aktuální hráč ---
         if self.game.current_user:
             user = get_user(self.game.current_user)
             if user:
-                highscore = user[2]  # podle struktury db: (id, username, highscore)
-                score_text = self.font.render(f"Highscore: {highscore}", True, (255, 255, 0))
-                screen.blit(score_text, (200, 400))
+                user_name = user[1]
+                highscore = user[2]
+                lastscore = user[3]  # podle struktury db: (id, username, highscore, lastscore)
+                user_text = self.current_user.render(f"Last user: {user_name}", True, (255, 255, 255))
+                score_text = self.current_user.render(f"Highscore: {highscore}", True, (255, 255, 0))
+                lastscore_text = self.current_user.render(f"Lastscore: {lastscore}", True, (255, 255, 0))
+                screen.blit(user_text, (400, 300))
+                screen.blit(lastscore_text, (400, 350))
+                screen.blit(score_text, (400, 400))
 
         # ----- LEADERBOARD -----
         top_players = get_top_players()
