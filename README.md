@@ -21,3 +21,6 @@ This project includes a Python package `numerical_methods` which provides:
 2. Methods to solve differential equations of the type dy/dx = f(x, y) for given initial data (x0, y0) and function f
 
 Jupyter notebooks with examples demonstrating how to apply these numerical methods are included.
+
+### 4. Project 4
+A simple arcade-style space game built with the `pygame` library, using object-oriented programming principles and a small SQL database.
